@@ -1,8 +1,9 @@
 import pexpect
 
 
-def listUsers():
-    child = pexpect.spawn('/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
+def list_users():
+    child = pexpect.spawn(
+        '/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
     child.expect('aws-cloudhsm>')
     child.sendline('listUsers')
     child.expect('aws-cloudhsm>')
@@ -11,17 +12,23 @@ def listUsers():
 
     return _user_dict(resp.decode().split())
 
-def changePswd(co_type, co_username, co_password, user_type, username, password):
-    child = pexpect.spawn('/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
+
+def change_user_password(crypto_officer_type, crypto_officer_username, crypto_officer_password,
+                         user_type, user_username, user_password):
+    child = pexpect.spawn(
+        '/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
     child.expect('aws-cloudhsm>')
-    child.sendline(f'loginHSM {co_type} {co_username} {co_password}')
+    child.sendline(
+        f'loginHSM {crypto_officer_type} {crypto_officer_username} {crypto_officer_password}')
     i = child.expect(['HSM Error', 'aws-cloudhsm>'])
     if i == 0:
         child.sendline('quit')
         child.expect(pexpect.EOF)
-        raise LoginHSMError(f'Username: {co_username} login failed')
+        raise LoginHSMError(
+            f'Username: {crypto_officer_username} login failed')
     elif i == 1:
-        child.sendline(f'changePswd {user_type} {username} {new_password}')
+        child.sendline(
+            f'changePswd {user_type} {user_username} {user_password}')
         child.expect('Do you want to continue(y/n)?')
         child.sendline('y')
         i1 = child.expect(['Retry/Ignore/Abort?(R/I/A)', 'aws-cloudhsm>'])
@@ -30,7 +37,8 @@ def changePswd(co_type, co_username, co_password, user_type, username, password)
             child.expect('aws-cloudhsm>')
             child.sendline('quit')
             child.expect(pexpect.EOF)
-            raise ChangePasswordError(f'Change password for username: {username} failed')
+            raise ChangePasswordError(
+                f'Change password for username: {user_username} failed')
         elif i1 == 1:
             resp = child.before
             child.sendline('quit')
@@ -41,17 +49,23 @@ def changePswd(co_type, co_username, co_password, user_type, username, password)
     else:
         raise Exception('Unspecified change password failure.')
 
-def createUser(co_type, co_username, co_password, user_type, username, password):
-    child = pexpect.spawn('/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
+
+def create_user(crypto_officer_type, crypto_officer_username, crypto_officer_password,
+                user_type, user_username, user_password):
+    child = pexpect.spawn(
+        '/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
     child.expect('aws-cloudhsm>')
-    child.sendline(f'loginHSM {co_type} {co_username} {co_password}')
+    child.sendline(
+        f'loginHSM {crypto_officer_type} {crypto_officer_username} {crypto_officer_password}')
     i = child.expect(['HSM Error', 'aws-cloudhsm>'])
     if i == 0:
         child.sendline('quit')
         child.expect(pexpect.EOF)
-        raise LoginHSMError(f'Username: {co_username} login failed')
+        raise LoginHSMError(
+            f'Username: {crypto_officer_username} login failed')
     elif i == 1:
-        child.sendline(f'createUser {user_type} {username} {password}')
+        child.sendline(
+            f'createUser {user_type} {user_username} {user_password}')
         child.expect('Do you want to continue(y/n)?')
         child.sendline('y')
         i1 = child.expect(['Retry/Ignore/Abort?(R/I/A)', 'aws-cloudhsm>'])
@@ -60,18 +74,17 @@ def createUser(co_type, co_username, co_password, user_type, username, password)
             child.expect('aws-cloudhsm>')
             child.sendline('quit')
             child.expect(pexpect.EOF)
-            raise ChangePasswordError(f'Create user: {username} failed')
+            raise ChangePasswordError(f'Create user: {user_username} failed')
         elif i1 == 1:
             resp = child.before
             child.sendline('quit')
             child.expect(pexpect.EOF)
 
-    breakpoint()
-
     if 'success' in resp.decode().split():
         return ' '.join(resp.decode().split()[1:])
     else:
         raise Exception('Unspecified create user failure.')
+
 
 def _user_dict(user_list):
     user_list = user_list[user_list.index('2FA') + 1:]
@@ -98,6 +111,7 @@ def _user_dict(user_list):
 
 class LoginHSMError(Exception):
     pass
+
 
 class ChangePasswordError(Exception):
     pass
