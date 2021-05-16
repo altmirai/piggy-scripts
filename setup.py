@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
-requirements = ['click']
+requirements = ['click', 'pexpect']
 
 setup(
     author="Altmirai LLC",
@@ -20,8 +20,8 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="A command line tool that provides the functionality to use AWS CloudHSM services as a bitcoin wallet.",
-    name='piggy-cli',
+    description="Pexpect scripts to run on AWS EC2 to connect to CloudHSM Management Utility and CloudHSM",
+    name='piggy-scripts',
     version='0.0.1',
     py_modules=['piggy-scripts'],
     packages=find_packages(exclude=[

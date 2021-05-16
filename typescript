@@ -1,0 +1,154 @@
+Script started on Sat May 15 23:22:24 2021
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac piggy-scripts % [K[?2004hsscript create-user[?2004l
+Usage: script create-user [OPTIONS]
+Try 'script create-user --help' for help.
+
+Error: Missing option '-cotype'.
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac piggy-scripts % [K[?2004hscript create-user[18Dexit              [14D . /Users/kyle/.local/share/virtualenvs/GitHub-RO0b66Nb/bin/activate[K[A[23Cexit[K[1B[K[A[30C . /Users/kyle/.local/share/virtualenvs/GitHub-RO0b66Nb/bin/activate[K[A[23Cexit[K[1B[K[A[30Cpipenv --rm[11D . /Users/kyle/.local/share/virtualenvs/GitHub-RO0b66Nb/bin/activate[K[A[23Cpipenv --rm[K[1B[K[A[37C[11Dexit        . /Users/kyle/.local/share/virtualenvs/GitHub-RO0b66Nb/bin/activate[K[A[23Cexit[K[1B[K[A[30C . /Users/kyle/.local/share/virtualenvs/GitHub-RO0b66Nb/bin/activate[K[A[23Cexit[K[1B[K[A[30Cscript create-user[18D                  [18Dscript create-user[18Dexit              [14D  e  ppython setup.py sdist[?2004l[1Brunning sdist
+running egg_info
+writing piggy_scripts.egg-info/PKG-INFO
+writing dependency_links to piggy_scripts.egg-info/dependency_links.txt
+writing entry points to piggy_scripts.egg-info/entry_points.txt
+writing requirements to piggy_scripts.egg-info/requires.txt
+writing top-level names to piggy_scripts.egg-info/top_level.txt
+file piggy-scripts.py (for module piggy-scripts) not found
+reading manifest file 'piggy_scripts.egg-info/SOURCES.txt'
+writing manifest file 'piggy_scripts.egg-info/SOURCES.txt'
+running check
+warning: Check: missing required meta-data: url
+
+creating piggy-scripts-0.0.1
+creating piggy-scripts-0.0.1/app
+creating piggy-scripts-0.0.1/app/routes
+creating piggy-scripts-0.0.1/app/scripts
+creating piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying files to piggy-scripts-0.0.1...
+copying README.md -> piggy-scripts-0.0.1
+copying setup.py -> piggy-scripts-0.0.1
+copying app/__init__.py -> piggy-scripts-0.0.1/app
+copying app/routes/__init__.py -> piggy-scripts-0.0.1/app/routes
+copying app/routes/click.py -> piggy-scripts-0.0.1/app/routes
+copying app/scripts/__init__.py -> piggy-scripts-0.0.1/app/scripts
+copying app/scripts/cloudhsm_mgmt_utility.py -> piggy-scripts-0.0.1/app/scripts
+copying piggy_scripts.egg-info/PKG-INFO -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/SOURCES.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/dependency_links.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/entry_points.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/requires.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/top_level.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+Writing piggy-scripts-0.0.1/setup.cfg
+Creating tar archive
+removing 'piggy-scripts-0.0.1' (and everything under it)
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac piggy-scripts % [K[?2004hppython setup.py bids   dist_wheel sdist[?2004l
+running bdist_wheel
+running build
+running build_py
+file piggy-scripts.py (for module piggy-scripts) not found
+file piggy-scripts.py (for module piggy-scripts) not found
+installing to build/bdist.macosx-11-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.macosx-11-x86_64/wheel
+creating build/bdist.macosx-11-x86_64/wheel/app
+copying build/lib/app/__init__.py -> build/bdist.macosx-11-x86_64/wheel/app
+creating build/bdist.macosx-11-x86_64/wheel/app/scripts
+copying build/lib/app/scripts/__init__.py -> build/bdist.macosx-11-x86_64/wheel/app/scripts
+copying build/lib/app/scripts/cloudhsm_mgmt_utility.py -> build/bdist.macosx-11-x86_64/wheel/app/scripts
+creating build/bdist.macosx-11-x86_64/wheel/app/routes
+copying build/lib/app/routes/click.py -> build/bdist.macosx-11-x86_64/wheel/app/routes
+copying build/lib/app/routes/__init__.py -> build/bdist.macosx-11-x86_64/wheel/app/routes
+running install_egg_info
+running egg_info
+writing piggy_scripts.egg-info/PKG-INFO
+writing dependency_links to piggy_scripts.egg-info/dependency_links.txt
+writing entry points to piggy_scripts.egg-info/entry_points.txt
+writing requirements to piggy_scripts.egg-info/requires.txt
+writing top-level names to piggy_scripts.egg-info/top_level.txt
+file piggy-scripts.py (for module piggy-scripts) not found
+reading manifest file 'piggy_scripts.egg-info/SOURCES.txt'
+writing manifest file 'piggy_scripts.egg-info/SOURCES.txt'
+Copying piggy_scripts.egg-info to build/bdist.macosx-11-x86_64/wheel/piggy_scripts-0.0.1-py3.9.egg-info
+running install_scripts
+adding license file "LICENSE" (matched pattern "LICEN[CS]E*")
+creating build/bdist.macosx-11-x86_64/wheel/piggy_scripts-0.0.1.dist-info/WHEEL
+creating 'dist/piggy_scripts-0.0.1-py3-none-any.whl' and adding 'build/bdist.macosx-11-x86_64/wheel' to it
+adding 'app/__init__.py'
+adding 'app/routes/__init__.py'
+adding 'app/routes/click.py'
+adding 'app/scripts/__init__.py'
+adding 'app/scripts/cloudhsm_mgmt_utility.py'
+adding 'piggy_scripts-0.0.1.dist-info/LICENSE'
+adding 'piggy_scripts-0.0.1.dist-info/METADATA'
+adding 'piggy_scripts-0.0.1.dist-info/WHEEL'
+adding 'piggy_scripts-0.0.1.dist-info/entry_points.txt'
+adding 'piggy_scripts-0.0.1.dist-info/top_level.txt'
+adding 'piggy_scripts-0.0.1.dist-info/RECORD'
+removing build/bdist.macosx-11-x86_64/wheel
+running sdist
+running check
+warning: Check: missing required meta-data: url
+
+creating piggy-scripts-0.0.1
+creating piggy-scripts-0.0.1/app
+creating piggy-scripts-0.0.1/app/routes
+creating piggy-scripts-0.0.1/app/scripts
+creating piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying files to piggy-scripts-0.0.1...
+copying README.md -> piggy-scripts-0.0.1
+copying setup.py -> piggy-scripts-0.0.1
+copying app/__init__.py -> piggy-scripts-0.0.1/app
+copying app/routes/__init__.py -> piggy-scripts-0.0.1/app/routes
+copying app/routes/click.py -> piggy-scripts-0.0.1/app/routes
+copying app/scripts/__init__.py -> piggy-scripts-0.0.1/app/scripts
+copying app/scripts/cloudhsm_mgmt_utility.py -> piggy-scripts-0.0.1/app/scripts
+copying piggy_scripts.egg-info/PKG-INFO -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/SOURCES.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/dependency_links.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/entry_points.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/requires.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+copying piggy_scripts.egg-info/top_level.txt -> piggy-scripts-0.0.1/piggy_scripts.egg-info
+Writing piggy-scripts-0.0.1/setup.cfg
+Creating tar archive
+removing 'piggy-scripts-0.0.1' (and everything under it)
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac piggy-scripts % [K[?2004hlls[?2004l
+LICENSE			build			setup.py
+README.md		dist			typescript
+app			piggy_scripts.egg-info
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac piggy-scripts % [K[?2004hccd dist[?2004l
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac dist % [K[?2004hlls[?2004l
+piggy-scripts-0.0.1.tar.gz		piggy_scripts-0.0.1-py3-none-any.whl
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac dist % [K[?2004hccd ..[?2004l
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac piggy-scripts % [K[?2004hppip install twine[?2004l
+Requirement already satisfied: twine in /usr/local/lib/python3.9/site-packages (3.3.0)
+Requirement already satisfied: tqdm>=4.14 in /usr/local/lib/python3.9/site-packages (from twine) (4.56.0)
+Requirement already satisfied: readme-renderer>=21.0 in /usr/local/lib/python3.9/site-packages (from twine) (28.0)
+Requirement already satisfied: requests>=2.20 in /usr/local/lib/python3.9/site-packages (from twine) (2.25.1)
+Requirement already satisfied: keyring>=15.1 in /usr/local/lib/python3.9/site-packages (from twine) (22.0.1)
+Requirement already satisfied: colorama>=0.4.3 in /usr/local/lib/python3.9/site-packages (from twine) (0.4.4)
+Requirement already satisfied: pkginfo>=1.4.2 in /usr/local/lib/python3.9/site-packages (from twine) (1.7.0)
+Requirement already satisfied: rfc3986>=1.4.0 in /usr/local/lib/python3.9/site-packages (from twine) (1.4.0)
+Requirement already satisfied: requests-toolbelt!=0.9.0,>=0.8.0 in /usr/local/lib/python3.9/site-packages (from twine) (0.9.1)
+Requirement already satisfied: setuptools>=0.7.0 in /usr/local/lib/python3.9/site-packages (from twine) (54.2.0)
+Requirement already satisfied: docutils>=0.13.1 in /usr/local/lib/python3.9/site-packages (from readme-renderer>=21.0->twine) (0.16)
+Requirement already satisfied: Pygments>=2.5.1 in /usr/local/lib/python3.9/site-packages (from readme-renderer>=21.0->twine) (2.7.4)
+Requirement already satisfied: bleach>=2.1.0 in /usr/local/lib/python3.9/site-packages (from readme-renderer>=21.0->twine) (3.2.3)
+Requirement already satisfied: six in /Users/kyle/Library/Python/3.9/lib/python/site-packages (from readme-renderer>=21.0->twine) (1.15.0)
+Requirement already satisfied: packaging in /usr/local/lib/python3.9/site-packages (from bleach>=2.1.0->readme-renderer>=21.0->twine) (20.8)
+Requirement already satisfied: webencodings in /usr/local/lib/python3.9/site-packages (from bleach>=2.1.0->readme-renderer>=21.0->twine) (0.5.1)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.9/site-packages (from requests>=2.20->twine) (2020.12.5)
+Requirement already satisfied: idna<3,>=2.5 in /usr/local/lib/python3.9/site-packages (from requests>=2.20->twine) (2.10)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /usr/local/lib/python3.9/site-packages (from requests>=2.20->twine) (1.26.3)
+Requirement already satisfied: chardet<5,>=3.0.2 in /usr/local/lib/python3.9/site-packages (from requests>=2.20->twine) (4.0.0)
+Requirement already satisfied: pyparsing>=2.0.2 in /usr/local/lib/python3.9/site-packages (from packaging->bleach>=2.1.0->readme-renderer>=21.0->twine) (2.4.7)
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac piggy-scripts % [K[?2004httwine upla oad dist/*[?2004l
+Uploading distributions to https://upload.pypi.org/legacy/
+Enter your username: altmirai
+Enter your password: 
+Uploading piggy_scripts-0.0.1-py3-none-any.whl
+  0%|                                                          | 0.00/8.26k [00:00<?, ?B/s] 97%|███████████████████████████████████████████████▍ | 8.00k/8.26k [00:00<00:00, 52.4kB/s]100%|█████████████████████████████████████████████████| 8.26k/8.26k [00:01<00:00, 5.83kB/s]
+Uploading piggy-scripts-0.0.1.tar.gz
+  0%|                                                          | 0.00/6.57k [00:00<?, ?B/s]100%|█████████████████████████████████████████████████| 6.57k/6.57k [00:01<00:00, 5.56kB/s]
+
+View at:
+https://pypi.org/project/piggy-scripts/0.0.1/
+[1m[7m%[27m[1m[0m                                                                                           [0m[27m[24m[Jkyle@imac piggy-scripts % [K[?2004h
