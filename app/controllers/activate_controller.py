@@ -1,5 +1,6 @@
 import app.scripts.terminal_scripts as term
 import app.scripts.cloudhsm_mgmt_utility_scripts as cmu
+import os
 
 
 class Activate:
@@ -11,17 +12,22 @@ class Activate:
         self.crypto_user_password = crypto_user_password
 
     def run(self):
-        # self._move_customer_ca_crt()
+        self._move_customer_ca_crt()
         self._edit_cloudhsm_client()
         output = self._change_preco_password()
-        breakpoint()
         output = self._create_crypto_user()
-        breakpoint()
         return
 
     def _move_customer_ca_crt(self):
-        term.move_customer_ca_cert()
-        return
+        if os.path.exists('/opt/cloudhsm/etc/customerCA.crt') is True:
+            return
+        elif os.path.exists(os.path.join(os.getcwd(), 'customerCA.crt')) is True:
+            term.move_customer_ca_cert()
+            while os.path.exists('/opt/cloudhsm/etc/customerCA.crt') is False:
+                pass
+            return
+        else:
+            raise Exception('customerCA.crt file not found')
 
     def _edit_cloudhsm_client(self):
         term.edit_cloudhsm_client(eni_ip=self.eni_ip)
