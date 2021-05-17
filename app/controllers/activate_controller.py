@@ -19,18 +19,11 @@ class Activate:
         return
 
     def _move_customer_ca_crt(self):
-        if os.path.exists('/opt/cloudhsm/etc/customerCA.crt') is True:
-            return
-        elif os.path.exists(os.path.join(os.getcwd(), 'customerCA.crt')) is True:
-            term.move_customer_ca_cert()
-            while os.path.exists('/opt/cloudhsm/etc/customerCA.crt') is False:
-                pass
-            return
-        else:
-            raise Exception('customerCA.crt file not found')
+        term.move_customer_ca_cert()
+        return
 
     def _edit_cloudhsm_client(self):
-        term.edit_cloudhsm_client(eni_ip=self.eni_ip)
+        term.configure_cloudhsm_mgmt_utility(eni_ip=self.eni_ip)
         return
 
     def _change_preco_password(self):
