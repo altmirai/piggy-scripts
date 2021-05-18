@@ -29,8 +29,12 @@ def activate(eni_ip, crypto_officer_password, crypto_user_username, crypto_user_
 @click.option('-username', 'username', prompt="Username: ", required=True)
 @click.option('-password', 'password', prompt="password: ", required=True)
 @click.option('-label', 'key_label', prompt="Key label: ", required=True)
-@click.option('-out', 'out_file', prompt="Output File: ", required=True)
-def gen_ecc_key_pair(eni_ip, username, password, key_label, out_file):
+def gen_ecc_key_pair(eni_ip, username, password, key_label):
 
-    resp = kmu.genECCKeyPair(username=username, password=password,
-                             key_label=key_label, out_file=out_file, eni_ip=eni_ip)
+    resp = kmu.genECCKeyPair(
+        username=username,
+        password=password,
+        key_label=key_label,
+        eni_ip=eni_ip
+    )
+    return

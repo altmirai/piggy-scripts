@@ -22,7 +22,7 @@ setup(
     ],
     description="Pexpect scripts to run on AWS EC2 to connect to CloudHSM Management Utility and CloudHSM",
     name='piggy-scripts',
-    version='0.0.6',
+    version='0.0.7',
     py_modules=['piggy-scripts'],
     packages=find_packages(exclude=[
         'docs',
