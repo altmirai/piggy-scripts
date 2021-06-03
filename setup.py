@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+# python setup.py bdist_wheel sdist
+# twine upload dist/*
+
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
@@ -22,7 +25,7 @@ setup(
     ],
     description="Pexpect scripts to run on AWS EC2 to connect to CloudHSM Management Utility and CloudHSM",
     name='piggy-scripts',
-    version='0.0.7',
+    version='0.0.10',
     py_modules=['piggy-scripts'],
     packages=find_packages(exclude=[
         'docs',

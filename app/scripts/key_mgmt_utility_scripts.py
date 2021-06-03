@@ -2,25 +2,35 @@ import pexpect
 import sys
 import io
 from datetime import datetime
+import time
 import os
 
 
-def login(username, password):
-    (output, exitstatus) = pexpect.run(
-        'sudo service cloudhsm-client start', withexitstatus=1)
-    assert exitstatus == 0, 'sudo service cloudhsm-client start failed.'
+def login(username, password, count=0):
+    count += 1
+    try:
+        (output, exitstatus) = pexpect.run(
+            'sudo service cloudhsm-client start', withexitstatus=1)
+        assert exitstatus == 0, 'sudo service cloudhsm-client start failed.'
 
-    child = pexpect.spawn('/opt/cloudhsm/bin/key_mgmt_util')
-    child.expect_exact('Command:')
-    child.sendline(f'loginHSM -u CU -p {password} -s {username}')
-    index = child.expect(
-        ['HSM Error: RET_USER_LOGIN_FAILURE', 'HSM Return: SUCCESS'])
-    if index == 0:
-        child.sendline('exit')
-        child.expect(pexpect.EOF)
-        raise LoginHSMError(f'Username {username} login failed')
-    else:
-        return child
+        child = pexpect.spawn('/opt/cloudhsm/bin/key_mgmt_util')
+        child.expect_exact('Command:')
+        child.sendline(f'loginHSM -u CU -p {password} -s {username}')
+        index = child.expect(
+            ['HSM Error: RET_USER_LOGIN_FAILURE', 'HSM Return: SUCCESS'])
+        if index == 0:
+            child.sendline('exit')
+            child.expect(pexpect.EOF)
+            raise LoginHSMError(f'Username {username} login failed')
+        else:
+            return child
+    except pexpect.EOF as e:
+        if count > 2:
+            time.sleep(1)
+            raise LoginHSMError('Unexpected EOF')
+        else:
+            time.sleep(1)
+            login(username, password, count)
 
 
 def generate_key_pair(username, password, key_label):

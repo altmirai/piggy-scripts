@@ -21,7 +21,6 @@ def activate(eni_ip, crypto_officer_password, crypto_user_username, crypto_user_
         crypto_user_password=crypto_user_password
     )
     activate.run()
-    return
 
 
 @script.command()
@@ -37,4 +36,5 @@ def gen_ecc_key_pair(eni_ip, username, password, key_label):
         key_label=key_label,
         eni_ip=eni_ip
     )
-    return
+
+    click.echo(resp)
