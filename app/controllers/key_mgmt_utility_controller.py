@@ -16,13 +16,16 @@ def genECCKeyPair(eni_ip, username, password, key_label):
     pub_key_pem_file_name = kmu.export_public_key(
         username=username, password=password, pub_key_handle=pub_key_handle)
 
+    with open(pub_key_pem_file_name, 'r') as file:
+        pub_key_pem = file.read()
+
     return json.dumps({
         'data':
             {
-                'label': key_label,
+                'public_key_pem': pub_key_pem,
                 'public_key_handle': key_handles['public_key'],
                 'private_key_handle': key_handles['private_key'],
-                'public_key_pem_file_name': pub_key_pem_file_name
+                'public_key_pem_file': pub_key_pem_file_name
             },
         'status_code': 200
     })
