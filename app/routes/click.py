@@ -24,10 +24,10 @@ def activate(eni_ip, crypto_officer_password, crypto_user_username, crypto_user_
 
 
 @script.command()
-@click.option('-eniip', 'eni_ip', prompt="HSM EniIp: ", required=True)
-@click.option('-username', 'username', prompt="Username: ", required=True)
-@click.option('-password', 'password', prompt="password: ", required=True)
-@click.option('-label', 'key_label', prompt="Key label: ", required=True)
+@click.option('-eniip', 'eni_ip', required=True)
+@click.option('-username', 'username', required=True)
+@click.option('-password', 'password', required=True)
+@click.option('-label', 'key_label', required=True)
 def gen_ecc_key_pair(eni_ip, username, password, key_label):
 
     resp = kmu.genECCKeyPair(
@@ -35,6 +35,28 @@ def gen_ecc_key_pair(eni_ip, username, password, key_label):
         password=password,
         key_label=key_label,
         eni_ip=eni_ip
+    )
+
+    click.echo(resp)
+
+
+@script.command()
+@click.option('-eniip', 'eni_ip', required=True)
+@click.option('-username', 'username', required=True)
+@click.option('-password', 'password', required=True)
+@click.option('-tx', 'tx_file', required=True)
+@click.option('-vkhandle', 'pub_key_handle', required=True)
+@click.option('-skhandle', 'private_key_handle', required=True)
+@click.option('-count', 'count', required=True)
+def sign(eni_ip, username, password, tx_file, pub_key_handle, private_key_handle, count):
+    resp = kmu.sign(
+        eni_ip=eni_ip,
+        username=username,
+        password=password,
+        tx_file=tx_file,
+        pub_key_handle=pub_key_handle,
+        private_key_handle=private_key_handle,
+        count=count
     )
 
     click.echo(resp)

@@ -67,6 +67,30 @@ def export_public_key(username, password, pub_key_handle):
     return f'pubKey{pub_key_handle}.pem'
 
 
+def sign(username, password, pub_key_handle, private_key_handle, tx_file, count):
+    log_file = _get_log_file_path(function_name='sign')
+
+    child = login(username=username, password=password)
+    child.logfile = open(log_file, 'wb')
+
+    child.sendline(
+        f"sign -f {tx_file} -k {private_key_handle} -out signedTx{count}.der -m 17")
+
+    child.expect('HSM Return: SUCCESS')
+    child.sendline(
+        f"verify -f {tx_file} -s signedTx{count}.der -k {pub_key_handle} -m 17")
+
+    child.expect('HSM Return: SUCCESS')
+    child.expect('HSM Return: SUCCESS')
+    child.sendline('logoutHSM')
+    child.expect('Command:')
+    child.sendline('exit')
+    child.expect(pexpect.EOF)
+    child.logfile.close()
+
+    return f"signedTx{count}.der"
+
+
 def _get_key_handles(log_file):
     with open(log_file, 'rb') as file:
         output = file.read()
