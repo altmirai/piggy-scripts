@@ -1,6 +1,7 @@
 import app.scripts.terminal_scripts as term
 import app.scripts.cloudhsm_mgmt_utility_scripts as cmu
 import os
+import time
 
 
 class Activate:
@@ -14,9 +15,12 @@ class Activate:
     def run(self):
         self._move_customer_ca_crt()
         self._edit_cloudhsm_client()
-        output = self._change_preco_password()
-        output = self._create_crypto_user()
-        return
+        if _can_connect_to_cloudhsm_mgmt_utility():
+            output = self._change_preco_password()
+            output = self._create_crypto_user()
+            return
+        else:
+            raise ConnectionError('Unable to Connect to CloudHSM Mgt Utility')
 
     def _move_customer_ca_crt(self):
         term.move_customer_ca_cert()
@@ -48,3 +52,22 @@ class Activate:
         )
 
         return
+
+
+def _can_connect_to_cloudhsm_mgmt_utility(count=0):
+    count += 1
+    print(count)
+
+    resp = cmu.test_connection()
+    if resp is True:
+        return True
+
+    if count < 5:
+        time.sleep(1)
+        _can_connect_to_cloudhsm_mgmt_utility(count=count)
+
+    return resp
+
+
+class ConnectionError(Exception):
+    pass

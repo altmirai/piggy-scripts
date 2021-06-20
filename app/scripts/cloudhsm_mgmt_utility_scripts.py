@@ -109,6 +109,25 @@ def _user_dict(user_list):
     return users
 
 
+def test_connection():
+    child = pexpect.spawn(
+        '/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
+    i = child.expect([
+        'aws-cloudhsm>',
+        'Connection to one of servers failed, exiting...',
+        pexpect.EOF
+    ])
+    if i == 0:
+        child.sendline('quit')
+        child.sendline('quit')
+        child.expect(pexpect.EOF)
+        return True
+    elif i == 1:
+        return 'Connection to one of servers failed'
+    else:
+        return 'Unexpected EOF'
+
+
 class LoginHSMError(Exception):
     pass
 

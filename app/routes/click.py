@@ -1,5 +1,6 @@
 from app.controllers.activate_controller import Activate
 import app.controllers.key_mgmt_utility_controller as kmu
+import app.scripts.cloudhsm_mgmt_utility_scripts as cmu
 import click
 
 
