@@ -20,23 +20,41 @@ class Activate:
 
             can_connect = _can_connect_to_cloudhsm_mgmt_utility()
 
-            child = _connect()
+            crypto_officer = activate_crypto_officer(
+                crypto_officer_password=self.crypto_officer_password)
 
-            child = _login_as_preco(child=child)
-
-            child, crypto_officer = _change_preco_to_crypto_officer(
-                child=child, crypto_officer_password=self.crypto_officer_password)
-
-            child, crypto_user = _create_crypto_user(
-                child=child, crypto_user_username=self.crypto_user_username, crypto_user_password=self.crypto_user_password)
-
-            cmu.quit(child=child)
+            crypto_user = create_crypto_user(
+                crypto_officer_password=self.crypto_officer_password,
+                crypto_user_username=self.crypto_user_username,
+                crypto_user_password=self.crypto_user_password
+            )
 
             return {'crypto_officer': crypto_officer, 'crypto_user': crypto_user}
 
         except Exception as Error:
 
             return {'error': Error}
+
+
+def activate_crypto_officer(crypto_officer_password):
+    child = _connect()
+    child = _login_as_preco(child=child)
+    child, crypto_officer = _change_preco_to_crypto_officer(
+        child=child, crypto_officer_password=crypto_officer_password)
+    cmu.quit(child=child)
+
+    return crypto_officer
+
+
+def create_crypto_user(crypto_officer_password, crypto_user_username, crypto_user_password):
+    child = _connect()
+    child = _login_as_crypto_officer(
+        child=child, crypto_officer_password=crypto_officer_password)
+    child, crypto_user = _create_crypto_user(
+        child=child, crypto_user_username=crypto_user_username, crypto_user_password=crypto_user_password)
+    cmu.quit(child=child)
+
+    return crypto_user
 
 
 def _move_customer_ca_cert():
@@ -76,6 +94,17 @@ def _login_as_preco(child):
         crypto_officer_type='PRECO',
         crypto_officer_username='admin',
         crypto_officer_password='password'
+    )
+    assert resp.get('error') is None, f"login failed: {resp['error']}"
+    return resp['data']['child']
+
+
+def _login_as_crypto_officer(child, crypto_officer_password):
+    resp = cmu.login(
+        child=child,
+        crypto_officer_type='CO',
+        crypto_officer_username='admin',
+        crypto_officer_password=crypto_officer_password
     )
     assert resp.get('error') is None, f"login failed: {resp['error']}"
     return resp['data']['child']
