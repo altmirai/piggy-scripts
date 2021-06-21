@@ -118,46 +118,6 @@ def quit(child):
     child.close()
 
 
-# def create_user(crypto_officer_type, crypto_officer_username, crypto_officer_password,
-#                 user_type, user_username, user_password):
-#     child = pexpect.spawn(
-#         '/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
-#     child.expect('aws-cloudhsm>')
-#     child.sendline(
-#         f'loginHSM {crypto_officer_type} {crypto_officer_username} {crypto_officer_password}')
-#     i = child.expect(['HSM Error', 'aws-cloudhsm>'])
-#     if i == 0:
-#         child.sendline('quit')
-#         child.expect(pexpect.EOF)
-#         raise LoginHSMError(
-#             f'Username: {crypto_officer_username} login failed')
-#     elif i == 1:
-#         child.sendline(
-#             f'createUser {user_type} {user_username} {user_password}')
-#         child.expect('Do you want to continue(y/n)?')
-#         child.sendline('y')
-#         i1 = child.expect(['Retry/Ignore/Abort?(R/I/A)', 'aws-cloudhsm>'])
-#         if i1 == 0:
-#             child.sendline('A')
-#             child.expect('aws-cloudhsm>')
-#             child.sendline('quit')
-#             child.expect(pexpect.EOF)
-#             raise ChangePasswordError(f'Create user: {user_username} failed')
-#         elif i1 == 1:
-#             resp = child.before
-#             child.sendline('quit')
-#             child.expect(pexpect.EOF)
-
-#     if 'success' in resp.decode().split():
-#         return ' '.join(resp.decode().split()[1:])
-#     else:
-#         raise Exception('Unspecified create user failure.')
-
-# def _login_error(child, crypto_officer_username):
-#     child.sendline('quit')
-#     child.expect(pexpect.EOF)
-#     raise LoginHSMError(f'Username: {crypto_officer_username} login failed')
-
 def _user_dict(user_list):
     user_list = user_list[user_list.index('2FA') + 1:]
     n, users = 0, []
@@ -190,7 +150,6 @@ def test_connection():
         pexpect.EOF,
         pexpect.TIMEOUT
     ])
-    breakpoint()
     if i == 0:
         child.sendline('quit')
         child.expect(pexpect.EOF)

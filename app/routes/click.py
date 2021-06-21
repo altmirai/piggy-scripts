@@ -22,7 +22,9 @@ def activate(eni_ip, crypto_officer_password, crypto_user_username, crypto_user_
         crypto_user_username=crypto_user_username,
         crypto_user_password=crypto_user_password
     )
-    activate.run()
+    resp = activate.run()
+
+    click.echo(resp)
 
 
 @script.command()
@@ -62,46 +64,3 @@ def sign(eni_ip, username, password, tx_file, pub_key_handle, private_key_handle
     )
 
     click.echo(resp)
-
-
-@script.command()
-# @click.option('-eniip', 'eni_ip', required=True)
-def test():
-
-    try:
-        resp = cmu.connect()
-        assert resp.get('error') is None, f"connect failed: {data['error']}"
-
-        resp = cmu.login(
-            child=resp['data']['child'],
-            crypto_officer_type='CO',
-            crypto_officer_username='admin',
-            crypto_officer_password='password1'
-        )
-        assert resp.get('error') is None, f"login failed: {resp['error']}"
-
-        resp = cmu.change_user_password(
-            child=resp['data']['child'],
-            user_type='CU',
-            user_username='cyrptouser',
-            user_password='password15'
-        )
-        assert resp.get(
-            'error') is None, f"Change user password failed: {resp['error']}"
-        changed_user = resp['data']['user']
-
-        resp = cmu.create_user(
-            child=resp['data']['child'],
-            user_type='CU',
-            user_username='newUser3',
-            user_password='password1'
-        )
-        assert resp.get(
-            'error') is None, f"Create user failed: {resp['error']}"
-        created_user = resp['data']['user']
-
-        cmu.quit(child=resp['data']['child'])
-        click.echo(changed_user)
-
-    except Exception as Error:
-        click.echo(Error)
