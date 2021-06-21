@@ -17,7 +17,7 @@ def login(username, password, count=0):
         child.expect_exact('Command:')
         child.sendline(f'loginHSM -u CU -p {password} -s {username}')
         index = child.expect(
-            ['HSM Error: RET_USER_LOGIN_FAILURE', 'HSM Return: SUCCESS'])
+            ['HSM Error', 'HSM Return: SUCCESS'])
         if index == 0:
             child.sendline('exit')
             child.expect(pexpect.EOF)
@@ -89,6 +89,23 @@ def sign(username, password, pub_key_handle, private_key_handle, tx_file, count)
     child.logfile.close()
 
     return f"signedTx{count}.der"
+
+
+def test_connection():
+    child = pexpect.spawn('/opt/cloudhsm/bin/key_mgmt_util')
+    i = child.expect([
+        'Command:',
+        'LIQUIDSECURITY: Daemon socket connection error',
+        pexpect.EOF
+    ])
+    if i == 0:
+        child.sendline('exit')
+        child.expect(pexpect.EOF)
+        return True
+    elif i == 1:
+        return 'Daemon socket connection error'
+    else:
+        return 'Unexpect EOF'
 
 
 def _get_key_handles(log_file):

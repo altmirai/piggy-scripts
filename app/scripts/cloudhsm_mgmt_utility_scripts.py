@@ -119,7 +119,6 @@ def test_connection():
     ])
     if i == 0:
         child.sendline('quit')
-        child.sendline('quit')
         child.expect(pexpect.EOF)
         return True
     elif i == 1:

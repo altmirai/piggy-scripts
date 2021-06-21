@@ -2,6 +2,7 @@ from app.controllers.activate_controller import Activate
 import app.controllers.key_mgmt_utility_controller as kmu
 import app.scripts.cloudhsm_mgmt_utility_scripts as cmu
 import click
+import app.scripts.terminal_scripts as term
 
 
 @click.group()
@@ -61,3 +62,13 @@ def sign(eni_ip, username, password, tx_file, pub_key_handle, private_key_handle
     )
 
     click.echo(resp)
+
+
+@script.command()
+@click.option('-eniip', 'eni_ip', required=True)
+def test(eni_ip):
+    moved = term.move_customer_ca_cert()
+
+    breakpoint()
+
+    click.echo(moved)
