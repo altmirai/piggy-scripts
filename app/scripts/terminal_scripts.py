@@ -4,49 +4,41 @@ import time
 import os
 
 
-def move_customer_ca_cert(count=0, resp=False):
+def move_customer_ca_cert(count=0):
+    count += 1
     exists = os.path.exists(os.path.join(os.getcwd(), 'customerCA.crt'))
     moved = os.path.exists('/opt/cloudhsm/etc/customerCA.crt')
-    count += 1
 
-    if exists is False:
-        if moved is True:
-            print(1)
-            resp = True
-        else:
-            print(2)
-            resp = False
-
-    if exists is True:
-        if moved is True:
-            print(3)
+    if exists is False and moved is True:
+        return True
+    elif exists is False and moved is False:
+        return False
+    else:
+        if count > 5:
+            return False
+        elif exists is True and moved is True:
             os.remove(os.path.join(os.getcwd(), 'customerCA.crt'))
+            return move_customer_ca_cert(count=count)
         else:
-            print(4)
             (output, exitstatus) = pexpect.run(
                 'sudo mv customerCA.crt /opt/cloudhsm/etc/customerCA.crt', withexitstatus=1)
-            assert exitstatus == 0, 'sudo mv customerCA.crt /opt/cloudhsm/etc/customerCA.crt failed.'
-        time.sleep(1)
-        move_customer_ca_cert(count=count)
-
-    breakpoint()
-    return resp
+            return move_customer_ca_cert(count=count)
 
 
 def configure_cloudhsm_mgmt_utility(eni_ip, count=0):
     count += 1
     hostname = _get_cmu_hostname()
-    assert count < 5, "Configure CloudHSM Mgmt Utility failed."
 
     if hostname == eni_ip:
         return True
-    elif count < 6:
-        (output, exitstatus) = pexpect.run(
-            f'sudo /opt/cloudhsm/bin/configure -a {eni_ip}', withexitstatus=1)
-        time.sleep(1)
-        configure_cloudhsm_mgmt_utility(eni_ip, count)
     else:
-        return False
+        if count > 5:
+            return False
+        else:
+            (output, exitstatus) = pexpect.run(
+                f'sudo /opt/cloudhsm/bin/configure -a {eni_ip}', withexitstatus=1)
+            time.sleep(1)
+            return configure_cloudhsm_mgmt_utility(eni_ip=eni_ip, count=count)
 
 
 def configure_cloudhsm_client(eni_ip, count=0):
@@ -113,4 +105,12 @@ def _get_cloudhsm_client_hostname():
 
 
 class CloudHSMClientStatusError(Exception):
+    pass
+
+
+class DuplicateFileError(Exception):
+    pass
+
+
+class FileNotMovedError(Exception):
     pass

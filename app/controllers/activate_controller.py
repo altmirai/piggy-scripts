@@ -13,38 +13,48 @@ class Activate:
         self.crypto_user_password = crypto_user_password
 
     def run(self):
-        moved = term.move_customer_ca_crt()
-        if moved is False:
-            raise FileNotFoundError('Unable move customerCA.crt')
+        try:
+            moved = term.move_customer_ca_crt()
+            assert moved, 'Unable move customerCA.crt'
 
-        configured = term.configure_cloudhsm_mgmt_utility(eni_ip=self.eni_ip)
-        if configured is False:
-            raise CloudHSMMgmtUtilityConfigureError(
-                'Unable to configure the CloudHSM Mgmt Utility')
+            configured = term.configure_cloudhsm_mgmt_utility(
+                eni_ip=self.eni_ip)
+            assert configured, 'Unable to configure the CloudHSM Mgmt Utility'
 
-        connected = _can_connect_to_cloudhsm_mgmt_utility()
-        if connected is False:
-            raise ConnectionError('Unable to Connect to CloudHSM Mgt Utility')
+            test_connected = _can_connect_to_cloudhsm_mgmt_utility()
+            assert test_connected, 'Unable to Connect to CloudHSM Mgmt Utility'
 
-        changed = cmu.change_user_password(
-            crypto_officer_type='PRECO',
-            crypto_officer_username='admin',
-            crypto_officer_password='password',
-            user_type='PRECO',
-            user_username='admin',
-            user_password=self.crypto_officer_password
-        )
+            connected, child = cmu.connect()
+            assert connected, 'Unable to Connect to CloudHSM Mgmt Utility'
 
-        created = cmu.create_user(
-            crypto_officer_type="CO",
-            crypto_officer_username="admin",
-            crypto_officer_password=self.crypto_officer_password,
-            user_type="CU",
-            user_username=self.crypto_user_username,
-            user_password=self.crypto_user_password
-        )
+            logged_in, child = cmu.login(
+                child=child,
+                crypto_officer_type='PRECO',
+                crypto_officer_username='admin',
+                crypto_officer_password='password'
+            )
+            assert logged_in, 'Unable to Login to the CloudHSM Mgmt Utility'
 
-        return True
+            changed = cmu.change_user_password(
+                child=child,
+                user_type='PRECO',
+                user_username='admin',
+                user_password=self.crypto_officer_password
+            )
+            assert changed, 'Unable to change user password'
+
+            created = cmu.create_user(
+                crypto_officer_type="CO",
+                crypto_officer_username="admin",
+                crypto_officer_password=self.crypto_officer_password,
+                user_type="CU",
+                user_username=self.crypto_user_username,
+                user_password=self.crypto_user_password
+            )
+
+            return True
+        except Exception as Error:
+            breakpoint()
 
     def _change_preco_password(self):
         cmu.change_user_password(
@@ -72,17 +82,15 @@ class Activate:
 
 def _can_connect_to_cloudhsm_mgmt_utility(count=0):
     count += 1
-    print(count)
-
-    resp = cmu.test_connection()
-    if resp is True:
+    connected = cmu.test_connection()
+    if connected is True:
         return True
-
-    if count < 5:
-        time.sleep(1)
-        _can_connect_to_cloudhsm_mgmt_utility(count=count)
-
-    return resp
+    else:
+        if count > 5:
+            return False
+        else:
+            time.sleep(1)
+            return _can_connect_to_cloudhsm_mgmt_utility(count=count)
 
 
 class ConnectionError(Exception):
