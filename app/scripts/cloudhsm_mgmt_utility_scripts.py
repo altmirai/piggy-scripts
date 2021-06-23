@@ -1,21 +1,22 @@
 import pexpect
 
 
-def list_users():
-    child = pexpect.spawn(
-        '/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
-    child.expect('aws-cloudhsm>')
+def list_users(child):
     child.sendline('listUsers')
-    child.expect('aws-cloudhsm>')
-    resp = child.before
-    child.sendline('quit')
+    expected_resps = ['aws-cloudhsm>', pexpect.EOF, pexpect.TIMEOUT]
+    i = child.expect(expected_resps)
+    if i == 0:
+        resp = child.before
+        return_resp = {'data': {'users': _user_dict(resp.decode().split())}}
+    else:
+        child.sendline('quit')
 
     return _user_dict(resp.decode().split())
 
 
 def connect():
     child = pexpect.spawn(
-        '/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg', timeout=1)
+        '/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg', timeout=5)
     expected_resps = ['aws-cloudhsm>', pexpect.EOF, pexpect.TIMEOUT]
 
     i = child.expect(expected_resps)
@@ -89,27 +90,46 @@ def create_user(child, user_type, user_username, user_password):
         return {'error': expected_resps[i]}
     else:
         child.sendline('y')
-        expected_resps = ['aws-cloudhsm>', "invalid user type", "Invalid input data/params",
-                          "min pswd len 7 and max pswd len 32", pexpect.EOF, pexpect.TIMEOUT]
+        expected_resps = [
+            'aws-cloudhsm>',
+            "This user is already created",
+            "invalid user type",
+            "Invalid input data/params",
+            "min pswd len 7 and max pswd len 32",
+            pexpect.EOF,
+            pexpect.TIMEOUT
+        ]
 
         i = child.expect(expected_resps)
         if i == 0:
             return {'data': {'child': child, 'user': {'type': user_type, 'username': user_username, 'password': user_password}}}
-        elif i > 2:
-            child.close()
-            return {'error': expected_resps[i]}
-        else:
+        elif i == 1:
             child.sendline('A')
-            resp = child.expect(
-                ['aws-cloudhsm>', pexpect.EOF, pexpect.TIMEOUT])
-            if resp == 0:
-                child.sendline('quit')
-                child.expect([pexpect.EOF, pexpect.TIMEOUT])
-                child.close()
-                return {'error': expected_resps[i]}
+            expected_resps = ['aws-cloudhsm>', pexpect.EOF, pexpect.TIMEOUT]
+
+            i = child.expect(expected_resps)
+            if i == 0:
+                return {'data': {'child': child, 'user': {'type': user_type, 'username': user_username, 'password': user_password}}}
             else:
                 child.close()
                 return {'error': expected_resps[i]}
+        else:
+            abort(child=child)
+            return {'error': expected_resps[i]}
+
+
+def abort(child):
+    child.sendline('A')
+    expected_resps = ['aws-cloudhsm>', pexpect.EOF, pexpect.TIMEOUT]
+    i = child.expect(expected_resps)
+    if i == 0:
+        child.sendline('quit')
+        child.expect([pexpect.EOF, pexpect.TIMEOUT])
+        child.close()
+    else:
+        child.close()
+
+    return
 
 
 def quit(child):
@@ -139,23 +159,6 @@ def _user_dict(user_list):
             dict['2FA'] = elem
             users.append(dict)
     return users
-
-
-def test_connection():
-    child = pexpect.spawn(
-        '/opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg')
-    i = child.expect([
-        'aws-cloudhsm>',
-        'Connection to one of servers failed, exiting...',
-        pexpect.EOF,
-        pexpect.TIMEOUT
-    ])
-    if i == 0:
-        child.sendline('quit')
-        child.expect(pexpect.EOF)
-        return True
-    else:
-        return False
 
 
 class LoginHSMError(Exception):

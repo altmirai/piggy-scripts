@@ -25,20 +25,12 @@ def move_customer_ca_cert(count=0):
             return move_customer_ca_cert(count=count)
 
 
-def configure_cloudhsm_mgmt_utility(eni_ip, count=0):
-    count += 1
-    hostname = _get_cmu_hostname()
+def configure_cloudhsm_mgmt_util(eni_ip):
+    output, exitstatus = pexpect.run(
+        f'sudo /opt/cloudhsm/bin/configure -a {eni_ip}', withexitstatus=1)
+    assert exitstatus == 0
 
-    if hostname == eni_ip:
-        return True
-    else:
-        if count > 5:
-            return False
-        else:
-            (output, exitstatus) = pexpect.run(
-                f'sudo /opt/cloudhsm/bin/configure -a {eni_ip}', withexitstatus=1)
-            time.sleep(1)
-            return configure_cloudhsm_mgmt_utility(eni_ip=eni_ip, count=count)
+    return output
 
 
 def configure_cloudhsm_client(eni_ip, count=0):

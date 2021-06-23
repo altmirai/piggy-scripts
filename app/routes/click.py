@@ -1,4 +1,4 @@
-from app.controllers.activate_controller import Activate, _can_connect_to_cloudhsm_mgmt_utility
+from app.controllers.activate_controller import Activate
 import app.controllers.key_mgmt_utility_controller as kmu
 import app.scripts.cloudhsm_mgmt_utility_scripts as cmu
 import click
@@ -64,3 +64,26 @@ def sign(eni_ip, username, password, tx_file, pub_key_handle, private_key_handle
     )
 
     click.echo(resp)
+
+
+@script.command()
+def test():
+    from app.controllers.cloudhsm_mgmt_util_controller import CloudHSMMgmtUtilController
+
+    eni_ip = '10.0.1.9'
+    crypto_officer_password = "password1"
+    crypto_user_username = "cryptouser"
+    crypto_user_password = "password1"
+
+    # CMU = CloudHSMMgmtUtilController(
+    #     eni_ip=eni_ip,
+    #     crypto_officer_username="admin",
+    #     crypto_officer_password=crypto_officer_password
+    #     )
+
+    util = CloudHSMMgmtUtilController.activate(
+        eni_ip=eni_ip,
+        crypto_officer_password=crypto_officer_password
+    )
+
+    breakpoint()
