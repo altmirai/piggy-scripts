@@ -12,17 +12,19 @@ def script():
 
 @script.command()
 @click.option('-eniip', 'eni_ip', required=True)
+@click.option('-cousername', 'crypto_officer_username', required=True)
 @click.option('-copassword', 'crypto_officer_password', required=True)
 @click.option('-cuusername', 'crypto_user_username', required=True)
 @click.option('-cupassword', 'crypto_user_password', required=True)
-def activate(eni_ip, crypto_officer_password, crypto_user_username, crypto_user_password):
+def activate(eni_ip, crypto_officer_username, crypto_officer_password, crypto_user_username, crypto_user_password):
     activate = Activate(
         eni_ip=eni_ip,
+        crypto_officer_username=crypto_officer_username,
         crypto_officer_password=crypto_officer_password,
         crypto_user_username=crypto_user_username,
         crypto_user_password=crypto_user_password
     )
-    resp = activate.run()
+    resp = activate.crypto_officer()
 
     click.echo(resp)
 
@@ -68,22 +70,22 @@ def sign(eni_ip, username, password, tx_file, pub_key_handle, private_key_handle
 
 @script.command()
 def test():
-    from app.controllers.cloudhsm_mgmt_util_controller import CloudHSMMgmtUtilController
+    from app.controllers.cloudhsm_mgmt_util_controller import CloudHSMMgmtUtil
 
-    eni_ip = '10.0.1.9'
+    eni_ip = '10.0.1.14'
+    crypto_officer_username = 'admin'
     crypto_officer_password = "password1"
     crypto_user_username = "cryptouser"
     crypto_user_password = "password1"
 
-    # CMU = CloudHSMMgmtUtilController(
-    #     eni_ip=eni_ip,
-    #     crypto_officer_username="admin",
-    #     crypto_officer_password=crypto_officer_password
-    #     )
-
-    util = CloudHSMMgmtUtilController.activate(
+    activate = Activate(
         eni_ip=eni_ip,
-        crypto_officer_password=crypto_officer_password
+        crypto_officer_username=crypto_officer_username,
+        crypto_officer_password=crypto_officer_password,
+        crypto_user_username=crypto_user_username,
+        crypto_user_password=crypto_user_password
     )
+
+    activate.run()
 
     breakpoint()

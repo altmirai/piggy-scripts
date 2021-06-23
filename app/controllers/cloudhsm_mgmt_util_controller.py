@@ -5,7 +5,7 @@ import time
 import json
 
 
-class CloudHSMMgmtUtilController():
+class CloudHSMMgmtUtil():
 
     def __init__(self, eni_ip, crypto_officer_username, crypto_officer_password):
         self.eni_ip = eni_ip
@@ -24,6 +24,14 @@ class CloudHSMMgmtUtilController():
             crypto_officer_username='admin',
             crypto_officer_password='password'
         )
+        util.active = True
+        util.crypto_officer_type = 'PRECO'
+        util.connect()
+        util.login()
+        util.change_password(
+            user_type='PRECO'
+        )
+
         breakpoint()
 
     @property
@@ -62,7 +70,7 @@ class CloudHSMMgmtUtilController():
 
     def is_active(self):
         if len(self.pre_crypto_officers) != 0:
-            False
+            return False
         else:
             return True
 
