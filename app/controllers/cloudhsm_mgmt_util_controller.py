@@ -17,22 +17,22 @@ class CloudHSMMgmtUtil():
         self.configured = self.configure()
         self.active = self.is_active()
 
-    @classmethod
-    def activate(cls, eni_ip, crypto_officer_password):
-        util = cls(
-            eni_ip=eni_ip,
-            crypto_officer_username='admin',
-            crypto_officer_password='password'
-        )
-        util.active = True
-        util.crypto_officer_type = 'PRECO'
-        util.connect()
-        util.login()
-        util.change_password(
-            user_type='PRECO'
-        )
+    # @classmethod
+    # def activate(cls, eni_ip, crypto_officer_password):
+    #     util = cls(
+    #         eni_ip=eni_ip,
+    #         crypto_officer_username='admin',
+    #         crypto_officer_password='password'
+    #     )
+    #     util.active = True
+    #     util.crypto_officer_type = 'PRECO'
+    #     util.connect()
+    #     util.login()
+    #     util.change_password(
+    #         user_type='PRECO'
+    #     )
 
-        breakpoint()
+    #     breakpoint()
 
     @property
     def hostname(self):
@@ -113,6 +113,7 @@ class CloudHSMMgmtUtil():
         if self.child is False:
             self.connect()
         try:
+            breakpoint()
             resp = cmu.login(
                 child=self.child,
                 crypto_officer_type=self.crypto_officer_type,
@@ -120,6 +121,28 @@ class CloudHSMMgmtUtil():
                 crypto_officer_password=self.crypto_officer_password
             )
             assert resp.get('error') is None, f"Login Failed: {resp['error']}"
+
+            return True
+
+        except AssertionError as e:
+            self.child = False
+            raise LoginError(e.args[0])
+
+    def crypto_user_login(self, username, password):
+        if self.active is False:
+            raise CloudMgmtUtilNotActiveError(
+                'Must activate the CloudHSM Mgmt Util first')
+        if self.child is False:
+            self.connect()
+        try:
+            resp = cmu.login(
+                child=self.child,
+                crypto_officer_type='CU',
+                crypto_officer_username=username,
+                crypto_officer_password=password
+            )
+            assert resp.get(
+                'error') is None, f"Crypto User Login Failed: {resp['error']}"
 
             return True
 

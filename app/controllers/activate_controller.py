@@ -1,6 +1,6 @@
 
 import app.scripts.terminal_scripts as term
-from app.controllers.cloudhsm_mgmt_util_controller import CloudHSMMgmtUtil
+from app.controllers.cloudhsm_mgmt_util_controller import CloudHSMMgmtUtil, LoginError
 import app.scripts.cloudhsm_mgmt_utility_scripts as cmu
 import os
 import time
@@ -15,33 +15,53 @@ class Activate:
         self.crypto_user_username = crypto_user_username
         self.crypto_user_password = crypto_user_password
 
-    def crypto_officer(self):
+    def run(self):
         try:
-            moved = term.move_customer_ca_cert()
-            assert moved, 'Unable move customerCA.crt'
-
             crypto_officer = self.activate_cloudhsm_mgmt_util()
+            crypto_user = self.create_crypto_user()
+            return {'crypto_officer': crypto_officer, 'crypto_user': crypto_user}
 
-            return {'crypto_officer': crypto_officer}
+        except ActivateCloudHSMUtilError as e:
+            return {'error': e}
 
-        except Exception as e:
+        except CreateCryptoUserError as e:
             return {'error': e}
 
     def activate_cloudhsm_mgmt_util(self):
+        moved = term.move_customer_ca_cert()
+        if moved is False:
+            raise ActivateCloudHSMUtilError('Unable to move customerCA.crt')
+
         cloudhsm_mgmt_util = CloudHSMMgmtUtil(
             eni_ip=self.eni_ip,
             crypto_officer_username=self.crypto_officer_username,
             crypto_officer_password='password'
         )
-        cloudhsm_mgmt_util.active = True
-        cloudhsm_mgmt_util.crypto_officer_type = 'PRECO'
+
+        if cloudhsm_mgmt_util.active is True:
+            try:
+                test = CloudHSMMgmtUtil(eni_ip=self.eni_ip, crypto_officer_username=self.crypto_officer_username,
+                                        crypto_officer_password=self.crypto_officer_password)
+                test.login()
+                test.quit()
+                return {'type': 'CO', 'username': self.crypto_officer_usrname, 'password': self.crypto_officer_password}
+            except LoginError:
+                raise ActivateCloudHSMUtilError(
+                    'CloudHSM Utility is active but crypto office username and password are not valid.')
+        else:
+            cloudhsm_mgmt_util.active = True
+            cloudhsm_mgmt_util.crypto_officer_type = 'PRECO'
+
         cloudhsm_mgmt_util.change_password(
             user_type='PRECO',
             username=self.crypto_officer_username,
             new_password=self.crypto_officer_password
         )
         cloudhsm_mgmt_util.quit()
+
         cloudhsm_mgmt_util.crypto_officer_password = self.crypto_officer_password
+        cloudhsm_mgmt_util.crypto_officer_type = 'CO'
+
         crypto_officers = cloudhsm_mgmt_util.crypto_officers
         for co in crypto_officers:
             if co['username'] == self.crypto_officer_username and co['user_type'] == 'CO':
@@ -53,8 +73,51 @@ class Activate:
 
         raise ActivateCloudHSMUtilError('Crypto Officer not created')
 
+    def create_crypto_user(self):
+        cloudhsm_mgmt_util = CloudHSMMgmtUtil(
+            eni_ip=self.eni_ip,
+            crypto_officer_username=self.crypto_officer_username,
+            crypto_officer_password=self.crypto_officer_password
+        )
+        assert cloudhsm_mgmt_util.active, 'CloudHSM Mgmt Utility must be active to create a crypto user.'
+
+        crypto_users = cloudhsm_mgmt_util.crypto_users
+        for cu in crypto_users:
+            if cu['username'] == self.crypto_user_username:
+                try:
+                    cloudhsm_mgmt_util.crypto_user_login(
+                        username=self.crypto_user_username, password=self.crypto_user_password)
+                    cloudhsm_mgmt_util.quit()
+                    return {'type': 'CU', 'username': self.crypto_user_username, 'password': self.crypto_user_password}
+                except LoginError:
+                    raise CreateCryptoUserError(
+                        f'Crypto User {self.crypto_user_username} exists, but with a different password.')
+
+        cloudhsm_mgmt_util.create_user(
+            user_type="CU",
+            username=self.crypto_user_username,
+            password=self.crypto_user_password
+        )
+        cloudhsm_mgmt_util.quit()
+
+        crypto_users = cloudhsm_mgmt_util.crypto_users
+        for cu in crypto_users:
+            if cu['username'] == self.crypto_user_username:
+                return {
+                    'type': cu['user_type'],
+                    'username': cu['username'],
+                    'password': self.crypto_user_password
+                }
+
+        raise CreateCryptoUserError(
+            f'Crypto User {self.crypto_user_username} was not created')
+
 
 class ActivateCloudHSMUtilError(Exception):
+    pass
+
+
+class CreateCryptoUserError(Exception):
     pass
 
 

@@ -3,6 +3,7 @@ import app.controllers.key_mgmt_utility_controller as kmu
 import app.scripts.cloudhsm_mgmt_utility_scripts as cmu
 import click
 import app.scripts.terminal_scripts as term
+import json
 
 
 @click.group()
@@ -26,7 +27,7 @@ def activate(eni_ip, crypto_officer_username, crypto_officer_password, crypto_us
     )
     resp = activate.crypto_officer()
 
-    click.echo(resp)
+    click.echo(json.dumps(resp))
 
 
 @script.command()
@@ -86,6 +87,6 @@ def test():
         crypto_user_password=crypto_user_password
     )
 
-    activate.run()
+    resp = activate.run()
 
     breakpoint()
