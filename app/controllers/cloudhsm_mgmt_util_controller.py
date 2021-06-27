@@ -7,32 +7,15 @@ import json
 
 class CloudHSMMgmtUtil():
 
-    def __init__(self, eni_ip, crypto_officer_username, crypto_officer_password):
+    def __init__(self, eni_ip, crypto_officer_type, crypto_officer_username, crypto_officer_password):
         self.eni_ip = eni_ip
-        self.crypto_officer_type = "CO"
+        self.crypto_officer_type = crypto_officer_type
         self.crypto_officer_username = crypto_officer_username
         self.crypto_officer_password = crypto_officer_password
         self.child = False
         self.logged_in = False
         self.configured = self.configure()
         self.active = self.is_active()
-
-    # @classmethod
-    # def activate(cls, eni_ip, crypto_officer_password):
-    #     util = cls(
-    #         eni_ip=eni_ip,
-    #         crypto_officer_username='admin',
-    #         crypto_officer_password='password'
-    #     )
-    #     util.active = True
-    #     util.crypto_officer_type = 'PRECO'
-    #     util.connect()
-    #     util.login()
-    #     util.change_password(
-    #         user_type='PRECO'
-    #     )
-
-    #     breakpoint()
 
     @property
     def hostname(self):
@@ -113,7 +96,6 @@ class CloudHSMMgmtUtil():
         if self.child is False:
             self.connect()
         try:
-            breakpoint()
             resp = cmu.login(
                 child=self.child,
                 crypto_officer_type=self.crypto_officer_type,

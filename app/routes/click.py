@@ -25,7 +25,7 @@ def activate(eni_ip, crypto_officer_username, crypto_officer_password, crypto_us
         crypto_user_username=crypto_user_username,
         crypto_user_password=crypto_user_password
     )
-    resp = activate.crypto_officer()
+    resp = activate.run()
 
     click.echo(json.dumps(resp))
 
