@@ -87,6 +87,7 @@ class CloudHSMMgmtUtil():
             if count > 5:
                 raise ConnectionError(e.args[0])
             else:
+                time.sleep(1)
                 return self.connect(count=count)
 
     def login(self):
