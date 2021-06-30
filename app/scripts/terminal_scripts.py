@@ -44,7 +44,7 @@ def configure_cloudhsm_client(eni_ip, count=0):
         (output, exitstatus) = pexpect.run(
             f'sudo /opt/cloudhsm/bin/configure -a {eni_ip}', withexitstatus=1)
         time.sleep(1)
-        configure_cloudhsm_client(eni_ip, count)
+        return configure_cloudhsm_client(eni_ip, count)
     else:
         return False
 
@@ -62,7 +62,7 @@ def start_cloudhsm_client(count=0):
         time.sleep(1)
         (output, exitstatus) = pexpect.run(
             'sudo service cloudhsm-client start', withexitstatus=1)
-        start_cloudhsm_client(count=count)
+        return start_cloudhsm_client(count=count)
     else:
         return False
 

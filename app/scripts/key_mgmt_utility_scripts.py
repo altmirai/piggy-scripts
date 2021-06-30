@@ -30,7 +30,7 @@ def login(username, password, count=0):
             raise LoginHSMError('Unexpected EOF')
         else:
             time.sleep(1)
-            login(username, password, count)
+            return login(username, password, count)
 
 
 def generate_key_pair(username, password, key_label):
